@@ -1,6 +1,4 @@
 # Ignore version control directories
-/versoes/
-
-
-.gitignore
-
+versoes/
+.git/
+.svn/
