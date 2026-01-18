@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Central de Controle Remoto - Controle seu computador"
+    />
+    <meta favicon="favicon.ico" />
+    <title>Central de Controle Remoto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      /* ===== Estilos Gerais ===== */
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+
+        /* 🔧 CORREÇÃO 1: viewport real no mobile */
+        height: 100dvh;
+        overflow: hidden;
+      }
+
+      /* ===== Área do trackpad ===== */
+      #trackpad {
+        flex: 1;
+        background-color: #1e1e1e;
+        touch-action: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+
+      #trackpad p {
+        color: #aaa;
+        font-size: 1.2em;
+        margin: 0;
+      }
+
+      .mouse-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 8px;
+      }
+
+      .mouse-buttons button {
+        flex: 1 1 100px;
+        max-width: 120px;
+        background-color: #444;
+        border-radius: 6px;
+        border: none;
+        color: #fff;
+        font-size: 1.1em;
+        padding: 10px 0;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.3s;
+      }
+
+      .mouse-buttons button:hover {
+        background-color: #666;
+      }
+
+      #display {
+        text-align: center;
+        padding: 8px 0;
+        font-size: 1.3em;
+        color: #0f0;
+        min-height: 1.5em;
+        user-select: none;
+      }
+
+      /* ===== Área do teclado ===== */
+      #keyboard {
+        background-color: #2a2a2a;
+        padding: 6px 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 8px;
+
+        /* 🔧 CORREÇÃO 2: não deixar o teclado estourar a tela */
+        max-height: 40%;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      /* Botões de controle Shift, Caps e Backspace */
+      #keyboard > div.control-row {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      #keyboard > div.control-row button {
+        flex: 1 1 80px;
+        max-width: 100px;
+        background-color: #444;
+        border-radius: 6px;
+        border: none;
+        color: #fff;
+        font-size: 1.1em;
+        padding: 8px 0;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.3s;
+      }
+
+      #keyboard > div.control-row button.control {
+        background-color: #0a0;
+      }
+
+      #keyboard > div.control-row button:hover {
+        background-color: #666;
+      }
+
+      /* Container das linhas de teclas */
+      #keys {
+        width: 100%;
+
+        /* 🔧 CORREÇÃO 3: evitar corte lateral no mobile */
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        box-sizing: border-box;
+      }
+
+      /* Cada linha de teclas */
+      #keys > div.key-row {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      /* Cada tecla */
+      button.key {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 8px 0;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: #444;
+        border: 1px solid #666;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        user-select: none;
+        text-align: center;
+        transition: background-color 0.2s;
+        max-width: 48px;
+        min-width: 36px;
+      }
+
+      button.key:hover {
+        background-color: #666;
+      }
+
+      /* Linha inferior com espaço e enter */
+      #keyboard > div.bottom-row {
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        box-sizing: border-box;
+        padding: 4px 0;
+      }
+
+      #keyboard > div.bottom-row button {
+        flex-shrink: 0;
+        border-radius: 6px;
+        border: none;
+        background-color: #444;
+        color: #fff;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.3s;
+        font-size: 1.1em;
+        padding: 10px 0;
+      }
+
+      #keyboard > div.bottom-row button.space {
+        flex-grow: 1;
+        max-width: none;
+        min-width: 80px;
+        margin: 0 8px;
+      }
+
+      #keyboard > div.bottom-row button:hover {
+        background-color: #666;
+      }
+
+      .btn-sair {
+        font-size: 1.3em;
+        color: #fff;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #e53935; /* vermelho */
+        margin-bottom: 20px;
+      }
+
+      .btn-sair:hover {
+        color: #b71c1c;
+      }
+
+      .btn-parar {
+        font-size: 1.3em;
+        color: #fff;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #e53935; /* vermelho */
+        margin-bottom: 20px;
+      }
+
+      .btn-sair:hover {
+        color: #b71c1c;
+      }
+      /* Responsividade para telas menores */
+      @media (max-width: 480px) {
+        #keyboard {
+          max-height: 45%;
+          max-width: 100%;
+          padding: 4px 6px;
+        }
+
+        #keys {
+          max-width: 100%;
+          gap: 4px;
+        }
+
+        #keys > div.key-row {
+          gap: 3px;
+        }
+
+        button.key {
+          font-size: 12px;
+          max-width: 40px;
+          min-width: 28px;
+          padding: 6px 0;
+        }
+
+        #keyboard > div.control-row button {
+          font-size: 1em;
+          flex: 1 1 60px;
+          max-width: 80px;
+          padding: 8px 0;
+        }
+
+        #keyboard > div.bottom-row button.space {
+          min-width: 60px;
+          margin: 0 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="trackpad">
+      <div>
+        <button onclick="window.close()" class="btn-sair">❌ Sair</button>
+      </div>
+      <div>
+        <button onclick="shutdownServer()" class="btn-parar">🚫 Parar Controle</button>
+      </div>
+      <p>🖱️ Deslize aqui para controlar o mouse</p>
+      <div class="mouse-buttons">
+        <button onclick="sendClick('left')">🖱️ Clique</button>
+        <button onclick="simulateDoubleClick()">🖱️ Duplo Clique</button>
+        <button onclick="sendClick('right')">🖱️ Clique Direito</button>
+      </div>
+      <div id="display">
+        <strong>Texto enviado:</strong> <span id="typed"></span>
+      </div>
+    </div>
+
+    <div id="keyboard">
+      <div class="control-row">
+        <button onclick="toggleShift()" id="shiftBtn">⇧ Shift</button>
+        <button onclick="toggleCaps()" id="capsBtn">⇪ Caps</button>
+        <button onclick="sendKey('Backspace')">⌫</button>
+      </div>
+
+      <div id="keys"></div>
+
+      <div class="bottom-row">
+        <button onclick="sendKey(' ')" class="space">␣ Espaço</button>
+        <button onclick="sendKey('Enter')">↵ Enter</button>
+      </div>
+    </div>
+
+    <script>
+      const serverURL = "http://192.168.0.115:9876";
+      let lastX = null,
+        lastY = null;
+      const pad = document.getElementById("trackpad");
+      const typedDisplay = document.getElementById("typed");
+      const keysDiv = document.getElementById("keys");
+
+      let shiftActive = false;
+      let capsActive = false;
+
+      const keyboardLayout = [
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "'", "´"],
+        ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"],
+        ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ç", "~"],
+        ["z", "x", "c", "v", "b", "n", "m", ",", ".", "-", "`"],
+        [";", "/", "\\", "=", "+", "*", "_", "@", ":", "?"],
+      ];
+
+      const shiftMap = {
+        1: "!",
+        2: "@",
+        3: "#",
+        4: "$",
+        5: "%",
+        6: "¨",
+        7: "&",
+        8: "*",
+        9: "(",
+        0: ")",
+        "'": '"',
+        "´": "~",
+        "`": "^",
+        "[": "{",
+        "]": "}",
+        ",": "<",
+        ".": ">",
+        "-": "_",
+        ";": ":",
+        "/": "?",
+        "=": "+",
+      };
+
+      pad.addEventListener("touchmove", function (e) {
+        const touch = e.touches[0];
+        if (lastX !== null && lastY !== null) {
+          const dx = touch.clientX - lastX;
+          const dy = touch.clientY - lastY;
+
+          fetch(`${serverURL}/move`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dx, dy }),
+          });
+        }
+        lastX = touch.clientX;
+        lastY = touch.clientY;
+      });
+
+      pad.addEventListener("touchend", function () {
+        lastX = null;
+        lastY = null;
+      });
+
+      function sendClick(type) {
+        let endpoint = "";
+        if (type === "left") endpoint = `${serverURL}/click`;
+        else if (type === "right") endpoint = `${serverURL}/rightclick`;
+        fetch(endpoint, { method: "POST" });
+      }
+
+      function simulateDoubleClick() {
+        sendClick("left");
+        setTimeout(() => sendClick("left"), 150);
+      }
+
+      function sendKey(key) {
+        fetch(`${serverURL}/key`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key }),
+        });
+
+        if (key === "Backspace") {
+          typedDisplay.textContent = typedDisplay.textContent.slice(0, -1);
+        } else if (key === "Enter") {
+          typedDisplay.textContent += "⏎";
+        } else if (key === " ") {
+          typedDisplay.textContent += " ";
+        } else {
+          typedDisplay.textContent += key;
+        }
+      }
+
+      function toggleShift() {
+        shiftActive = !shiftActive;
+        updateKeys();
+        document
+          .getElementById("shiftBtn")
+          .classList.toggle("control", shiftActive);
+      }
+
+      function toggleCaps() {
+        capsActive = !capsActive;
+        updateKeys();
+        document
+          .getElementById("capsBtn")
+          .classList.toggle("control", capsActive);
+      }
+
+      function handleKey(btn) {
+        const baseChar = btn.getAttribute("data-char");
+        let charToSend = baseChar;
+
+        if (shiftActive && shiftMap[baseChar]) {
+          charToSend = shiftMap[baseChar];
+        } else if (
+          (capsActive && !shiftActive) ||
+          (!capsActive && shiftActive)
+        ) {
+          charToSend = baseChar.toUpperCase();
+        }
+
+        sendKey(charToSend);
+
+        if (shiftActive) {
+          shiftActive = false;
+          updateKeys();
+          document.getElementById("shiftBtn").classList.remove("control");
+        }
+      }
+
+      function updateKeys() {
+        keysDiv.innerHTML = "";
+        keyboardLayout.forEach((row) => {
+          const rowDiv = document.createElement("div");
+          rowDiv.classList.add("key-row");
+          row.forEach((char) => {
+            let displayChar = char;
+            if (shiftActive && shiftMap[char]) {
+              displayChar = shiftMap[char];
+            } else if (
+              (capsActive && !shiftActive) ||
+              (!capsActive && shiftActive)
+            ) {
+              displayChar = char.toUpperCase();
+            }
+            const btn = document.createElement("button");
+            btn.className = "key";
+            btn.setAttribute("data-char", char);
+            btn.textContent = displayChar;
+            btn.onclick = () => handleKey(btn);
+            rowDiv.appendChild(btn);
+          });
+          keysDiv.appendChild(rowDiv);
+        });
+      }
+
+      updateKeys();
+
+      function shutdownServer() {
+        fetch(`${serverURL}/shutdown`, { method: "POST" });
+      }
+    </script>
+  </body>
+</html>
