@@ -204,34 +204,30 @@
       #keyboard > div.bottom-row button:hover {
         background-color: #666;
       }
-
-      .btn-sair {
-        font-size: 1.3em;
-        color: #fff;
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #e53935; /* vermelho */
-        margin-bottom: 20px;
+      .control-site {
+        position: absolute;
+        top: 10px;
+        left: 10px; /* começa da esquerda */
+        right: 10px; /* ocupa até a direita */
+        display: flex;
+        justify-content: space-between; /* joga um para a esquerda e outro para a direita */
+        align-items: center;
       }
 
-      .btn-sair:hover {
-        color: #b71c1c;
-      }
-
+      .btn-sair,
       .btn-parar {
         font-size: 1.3em;
-        color: #fff;
         background: none;
         border: none;
         cursor: pointer;
         color: #e53935; /* vermelho */
-        margin-bottom: 20px;
       }
 
-      .btn-sair:hover {
+      .btn-sair:hover,
+      .btn-parar:hover {
         color: #b71c1c;
       }
+
       /* Responsividade para telas menores */
       @media (max-width: 480px) {
         #keyboard {
@@ -272,11 +268,13 @@
   </head>
   <body>
     <div id="trackpad">
-      <div>
-        <button onclick="window.close()" class="btn-sair">❌ Sair</button>
-      </div>
-      <div>
-        <button onclick="shutdownServer()" class="btn-parar">🚫 Parar Controle</button>
+      <div class="control-site">
+        <button class="btn-sair" onclick="window.close()" class="btn-sair">
+          ❌ Sair
+        </button>
+        <button class="btn-parar" onclick="shutdownServer()">
+          🚫 Parar Controle
+        </button>
       </div>
       <p>🖱️ Deslize aqui para controlar o mouse</p>
       <div class="mouse-buttons">
