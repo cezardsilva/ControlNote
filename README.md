@@ -13,12 +13,16 @@ kill -9 <PID>
 
 
 ### Para matar o serviço Tailscale:
-srvlinux@srvlinux-Latitude-E6420:~$ sudo tailscale serve --bg http://localhost:9876
+srvlinux@srvlinux-Latitude-E6420:~$ 
+```sh
+sudo tailscale serve --bg http://localhost:9876
+```
 [sudo] senha para srvlinux: 
 Available within your tailnet:
-
+```sh
 https://srvlinux-latitude-e6420.tailbe5b34.ts.net/
 |-- proxy http://localhost:9876
+```
 
 Serve started and running in the background.
 To disable the proxy, run: tailscale serve --https=443 off
@@ -32,9 +36,9 @@ Agora o detalhe técnico, com precisão.
 🔹 O hostname *.tail*.ts.net
 
 Quando você roda:
-
+```sh
 tailscale serve --bg http://localhost:9876
-
+```
 
 o Tailscale cria (ou reutiliza) um hostname estável para esse nó:
 ```sh
