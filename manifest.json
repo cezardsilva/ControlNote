@@ -1,0 +1,9 @@
+{
+  "name": "ControlNote",
+  "short_name": "ControlNote",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000",
+  "theme_color": "#000",
+  "icons": [{ "src": "/icon.png", "sizes": "192x192", "type": "image/png" }]
+}
