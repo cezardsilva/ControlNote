@@ -269,9 +269,10 @@
   <body>
     <div id="trackpad">
       <div class="control-site">
-        <button class="btn-sair" onclick="window.close()" class="btn-sair">
+        <!--<button class="btn-sair" onclick="window.close()" class="btn-sair">
           ❌ Sair
-        </button>
+        </button>-->
+        <button class="btn-sair" onclick="sair()">❌ Sair</button>
         <button class="btn-parar" onclick="shutdownServer()">
           🚫 Parar Controle
         </button>
@@ -303,7 +304,7 @@
     </div>
 
     <script>
-      const serverURL = "http://192.168.0.115:9876";
+      const serverURL = "https://srvlinux-latitude-e6420.tailbe5b34.ts.net/";
       let lastX = null,
         lastY = null;
       const pad = document.getElementById("trackpad");
@@ -464,6 +465,14 @@
 
       function shutdownServer() {
         fetch(`${serverURL}/shutdown`, { method: "POST" });
+      }
+
+      function sair() {
+        if (window.opener) {
+          window.close();
+        } else {
+          location.replace("about:blank");
+        }
       }
     </script>
   </body>
