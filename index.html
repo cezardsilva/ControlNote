@@ -10,7 +10,8 @@
     />
     <meta favicon="favicon.ico" />
     <title>Central de Controle Remoto</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.json" />
+
     <style>
       /* ===== Estilos Gerais ===== */
       body {
@@ -473,6 +474,11 @@
         } else {
           location.replace("about:blank");
         }
+      }
+    </script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js");
       }
     </script>
   </body>
